@@ -1,0 +1,31 @@
+[INFO] Starting new training log...
+[2025-04-28 16:07:51] [INFO] Using device: cuda
+[2025-04-28 16:07:58] [INFO] Starting training...
+[2025-04-28 16:28:33] [Epoch 1/10] Train Loss: 110.6054 | Train Acc: 0.9088 | Val Acc: 0.9368
+[2025-04-28 16:28:33] [INFO] New best model saved with val acc: 0.9368
+[2025-04-28 16:43:49] [Epoch 2/10] Train Loss: 41.0435 | Train Acc: 0.9701 | Val Acc: 0.9534
+[2025-04-28 16:43:49] [INFO] New best model saved with val acc: 0.9534
+[2025-04-28 16:58:51] [Epoch 3/10] Train Loss: 31.3983 | Train Acc: 0.9773 | Val Acc: 0.9596
+[2025-04-28 16:58:51] [INFO] New best model saved with val acc: 0.9596
+[2025-04-28 17:13:55] [Epoch 4/10] Train Loss: 26.8187 | Train Acc: 0.9806 | Val Acc: 0.9686
+[2025-04-28 17:13:55] [INFO] New best model saved with val acc: 0.9686
+[2025-04-28 17:28:50] [Epoch 5/10] Train Loss: 23.1951 | Train Acc: 0.9836 | Val Acc: 0.9680
+[2025-04-28 17:43:52] [Epoch 6/10] Train Loss: 20.4874 | Train Acc: 0.9851 | Val Acc: 0.9734
+[2025-04-28 17:43:52] [INFO] New best model saved with val acc: 0.9734
+[2025-04-28 17:58:49] [Epoch 7/10] Train Loss: 19.5807 | Train Acc: 0.9860 | Val Acc: 0.9755
+[2025-04-28 17:58:49] [INFO] New best model saved with val acc: 0.9755
+[2025-04-28 18:13:49] [Epoch 8/10] Train Loss: 18.2650 | Train Acc: 0.9867 | Val Acc: 0.9747
+[2025-04-28 18:28:46] [Epoch 9/10] Train Loss: 17.4008 | Train Acc: 0.9875 | Val Acc: 0.9746
+[2025-04-28 18:43:49] [Epoch 10/10] Train Loss: 16.9706 | Train Acc: 0.9878 | Val Acc: 0.9745
+[2025-04-28 18:43:49] [INFO] Evaluating best model on test set...
+[2025-04-28 18:44:29] [[5284  208]
+ [1437 3976]]
+[2025-04-28 18:44:29]               precision    recall  f1-score   support
+
+Deepfake (0)       0.79      0.96      0.87      5492
+Original (1)       0.95      0.73      0.83      5413
+
+    accuracy                           0.85     10905
+   macro avg       0.87      0.85      0.85     10905
+weighted avg       0.87      0.85      0.85     10905
+

@@ -1,0 +1,43 @@
+## SLURM PROLOG ###############################################################
+##    Job ID : 11205834
+##  Job Name : wzy_train_augdrop
+##  Nodelist : gpu1401
+##      CPUs : 4
+##  Mem/Node : 16384 MB
+## Directory : /oscar/home/zwang569
+##   Job Started : Tue Apr 29 09:42:13 PM EDT 2025
+###############################################################################
+[INFO] Using device: cuda
+[INFO] Starting training...
+[Epoch 1/10] Train Loss: 111.7041 | Train Acc: 0.8469 | Val Acc: 0.8848
+[INFO] New best model saved with val acc: 0.9348
+[Epoch 2/10] Train Loss: 40.6370 | Train Acc: 0.8809 | Val Acc: 0.9269
+[INFO] New best model saved with val acc: 0.9569
+[Epoch 3/10] Train Loss: 31.3487 | Train Acc: 0.8970 | Val Acc: 0.9337
+[INFO] New best model saved with val acc: 0.9637
+[Epoch 4/10] Train Loss: 26.0443 | Train Acc: 0.9310 | Val Acc: 0.9583
+[INFO] New best model saved with val acc: 0.9683
+[Epoch 5/10] Train Loss: 22.9226 | Train Acc: 0.9633 | Val Acc: 0.9629
+[INFO] New best model saved with val acc: 0.9729
+[Epoch 6/10] Train Loss: 20.3329 | Train Acc: 0.9550 | Val Acc: 0.9743
+[INFO] New best model saved with val acc: 0.9743
+[Epoch 7/10] Train Loss: 19.1783 | Train Acc: 0.9862 | Val Acc: 0.9757
+[INFO] New best model saved with val acc: 0.9757
+[Epoch 8/10] Train Loss: 18.2768 | Train Acc: 0.9670 | Val Acc: 0.9755
+[Epoch 9/10] Train Loss: 17.5193 | Train Acc: 0.9870 | Val Acc: 0.9767
+[INFO] New best model saved with val acc: 0.9767
+[Epoch 10/10] Train Loss: 16.5684 | Train Acc: 0.9879 | Val Acc: 0.9772
+[INFO] New best model saved with val acc: 0.9772
+[INFO] Evaluating best model on test set...
+[INFO] Saved misclassified image list to misclassified.txt
+[[5286  206]
+ [1370 4043]]
+              precision    recall  f1-score   support
+
+Deepfake (0)       0.79      0.96      0.87      5492
+Original (1)       0.95      0.75      0.84      5413
+
+    accuracy                           0.86     10905
+   macro avg       0.87      0.85      0.85     10905
+weighted avg       0.87      0.86      0.85     10905
+

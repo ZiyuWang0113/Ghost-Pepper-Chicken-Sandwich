@@ -2,9 +2,11 @@
 
 ## Github repo for 1430 projects
 
+Code for each model is in the folder
+
 ### CNN
 
-[guide]()
+[guide](CNN/readme.md)
 
 ### Efficientnets
 

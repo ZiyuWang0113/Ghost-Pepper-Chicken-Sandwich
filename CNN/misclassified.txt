@@ -1,0 +1,25 @@
+This file will update once training is done on Oscar, and this is a subset of misclassified image.
+
+Misclassified as FAKE (should be REAL):
+./data/Test/Real/real_1007.jpg
+./data/Test/Real/real_1023.jpg
+./data/Test/Real/real_104.jpg
+./data/Test/Real/real_1047.jpg
+./data/Test/Real/real_1048.jpg
+./data/Test/Real/real_1054.jpg
+./data/Test/Real/real_1060.jpg
+./data/Test/Real/real_110.jpg
+./data/Test/Real/real_1103.jpg
+./data/Test/Real/real_111.jpg
+
+Misclassified as REAL (should be FAKE):
+./data/Test/Fake/fake_101.jpg
+./data/Test/Fake/fake_104.jpg
+./data/Test/Fake/fake_1187.jpg
+./data/Test/Fake/fake_12.jpg
+./data/Test/Fake/fake_1272.jpg
+./data/Test/Fake/fake_1274.jpg
+./data/Test/Fake/fake_1279.jpg
+./data/Test/Fake/fake_1305.jpg
+./data/Test/Fake/fake_1454.jpg
+./data/Test/Fake/fake_1473.jpg
