@@ -14,6 +14,7 @@ from skimage.segmentation import mark_boundaries
 MODEL_PATH = "resnet18_ffpp.pth"
 IMAGE_FOLDER = "./sample"
 OUTPUT_FOLDER = "./output"
+R2_LOG_PATH = os.path.join(OUTPUT_FOLDER, "lime_r2_scores.txt")
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 # === Load Model ===
@@ -73,8 +74,15 @@ def visualize_lime(img_path):
     print(f"[INFO] Saved LIME visualization to {save_path}")
     plt.close()
 
+    # Save R^2 score for this image
+    with open(R2_LOG_PATH, "a") as f:
+        f.write(f"{base}: R^2 Score = {explanation.score:.4f}\n")
+
 # === Run All ===
 if __name__ == "__main__":
+    with open(R2_LOG_PATH, "w") as f:
+        f.write("LIME R^2 Scores per Image:\n")
+
     for img_file in os.listdir(IMAGE_FOLDER):
         if img_file.lower().endswith((".jpg", ".jpeg", ".png")):
             img_path = os.path.join(IMAGE_FOLDER, img_file)

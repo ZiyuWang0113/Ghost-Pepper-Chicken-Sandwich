@@ -1,0 +1,7 @@
+LIME R^2 Scores per Image:
+fake_624: R^2 Score = 0.3479
+fake_625: R^2 Score = 0.3143
+fake_933: R^2 Score = 0.4790
+real_3189: R^2 Score = 0.6445
+real_71: R^2 Score = 0.5698
+real_940: R^2 Score = 0.4962
