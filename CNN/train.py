@@ -125,7 +125,7 @@ log("[INFO] Evaluating best model on test set...")
 model.load_state_dict(torch.load(SAVE_MODEL_PATH))
 model.eval()
 
-misclassified = {0: [], 1: []}  # 0 = fake, 1 = real
+misclassified_list = []
 test_preds, test_labels = [], []
 
 # Need access to image paths
@@ -144,20 +144,17 @@ with torch.no_grad():
             test_preds.append(pred)
             test_labels.append(label)
 
-            if pred != label and len(misclassified[label]) < 10:
+            if pred != label:
                 img_index = i * BATCH_SIZE + j
                 if img_index < len(image_paths):
-                    misclassified[label].append(image_paths[img_index])
+                    base = os.path.splitext(os.path.basename(image_paths[img_index]))[0]
+                    label_prefix = "real" if label == 1 else "fake"
+                    misclassified_list.append(f"{label_prefix}_{base}")
 
-# Save misclassified examples to a file
+# Save all misclassified image names in one line
 MISCLASSIFIED_PATH = "misclassified.txt"
 with open(MISCLASSIFIED_PATH, "w") as f:
-    f.write("Misclassified as FAKE (should be REAL):\n")
-    for path in misclassified[1]:
-        f.write(f"{path}\n")
-    f.write("\nMisclassified as REAL (should be FAKE):\n")
-    for path in misclassified[0]:
-        f.write(f"{path}\n")
+    f.write(", ".join(misclassified_list))
 log(f"[INFO] Saved misclassified image list to {MISCLASSIFIED_PATH}")
 
 # Report results

@@ -4,11 +4,10 @@ import torch
 import torch.nn as nn
 from PIL import Image
 import matplotlib.pyplot as plt
-import cv2
-
-from torchvision import models, transforms
 from lime import lime_image
 from skimage.segmentation import mark_boundaries
+from torchvision import models, transforms
+from matplotlib import gridspec
 
 # === Configuration ===
 MODEL_PATH = "resnet18_ffpp.pth"
@@ -28,55 +27,85 @@ model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
 model = model.to(device)
 model.eval()
 
-# === Image Transform ===
+# === Transforms ===
 normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
 transform_tensor = transforms.Compose([
-    transforms.Resize((256, 256)),
+    transforms.Resize((224, 224)),
     transforms.ToTensor(),
     normalize,
 ])
 
 transform_raw = transforms.Compose([
-    transforms.Resize((256, 256)),
+    transforms.Resize((224, 224)),
 ])
 
-# === Prediction Function for LIME ===
+# === Prediction Function ===
 def batch_predict(images):
-    model.eval()
     batch = torch.stack([transform_tensor(Image.fromarray(img)) for img in images], dim=0).to(device)
     with torch.no_grad():
         logits = model(batch)
         probs = torch.softmax(logits, dim=1)
     return probs.cpu().numpy()
 
-# === Visualization ===
-def visualize_lime(img_path):
+# === LIME Visualization Function ===
+def visualize_lime(img_path, top_regions=5):
     img = Image.open(img_path).convert("RGB")
     img_np = np.array(transform_raw(img))
 
     explainer = lime_image.LimeImageExplainer()
-    explanation = explainer.explain_instance(img_np, batch_predict, top_labels=1, hide_color=0, num_samples=1000)
+    explanation = explainer.explain_instance(
+        img_np, batch_predict, top_labels=1, hide_color=0, num_samples=1000
+    )
 
-    temp, mask = explanation.get_image_and_mask(label=explanation.top_labels[0], positive_only=True, hide_rest=False)
-    result = mark_boundaries(temp / 255.0, mask)
+    label = explanation.top_labels[0]
+    probs = batch_predict([img_np])[0]
+    pred_class = np.argmax(probs)
+    confidence = probs[pred_class]
+    is_correct = (label == pred_class)
+    segments = explanation.segments
+    weights = explanation.local_exp[label]
+    r2 = explanation.score
 
-    # Save the figure
-    filename = os.path.basename(img_path)
-    base = os.path.splitext(filename)[0]
-    save_path = os.path.join(OUTPUT_FOLDER, f"{base}_lime.png")
+    # Plot LIME
+    fig = plt.figure(figsize=(20, 5))
+    gs = gridspec.GridSpec(1, top_regions + 1)
 
-    plt.imshow(result)
-    plt.title(f"LIME - {base}")
-    plt.axis('off')
+    # Superpixel view
+    ax = fig.add_subplot(gs[0])
+    ax.imshow(mark_boundaries(img_np, segments))
+    ax.set_title("All Superpixels")
+    ax.axis("off")
+
+    # Top region overlays
+    top_segments = sorted(weights, key=lambda x: abs(x[1]), reverse=True)[:top_regions]
+    for i, (seg_id, weight) in enumerate(top_segments):
+        mask = segments == seg_id
+        highlighted = img_np.copy().astype(float)
+        overlay = np.zeros_like(highlighted)
+        if weight > 0:
+            overlay[mask] = [0, 255, 0]  # green
+        else:
+            overlay[mask] = [255, 0, 0]  # red
+        alpha = 0.5
+        composite = np.clip((1 - alpha) * highlighted + alpha * overlay, 0, 255).astype(np.uint8)
+
+        ax = fig.add_subplot(gs[i + 1])
+        ax.imshow(mark_boundaries(composite, mask.astype(int)))
+        ax.set_title(f"Region {seg_id}\nImportance: {weight:+.4f}")
+        ax.axis("off")
+
+    base = os.path.splitext(os.path.basename(img_path))[0]
+    save_path = os.path.join(OUTPUT_FOLDER, f"{base}_lime_regions.png")
     plt.tight_layout()
     plt.savefig(save_path)
-    print(f"[INFO] Saved LIME visualization to {save_path}")
     plt.close()
+    print(f"[INFO] Saved enhanced LIME visualization to {save_path}")
 
-    # Save R^2 score for this image
+    avg_weight = np.mean([abs(w) for (_, w) in explanation.local_exp[label]])
     with open(R2_LOG_PATH, "a") as f:
-        f.write(f"{base}: R^2 Score = {explanation.score:.4f}\n")
+        f.write(f"{base}: R^2 Score = {r2:.4f}, Confidence = {confidence:.4f}, "
+                f"Correct = {is_correct}, AvgInfluence = {avg_weight:.4f}\n")
 
 # === Run All ===
 if __name__ == "__main__":

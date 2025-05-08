@@ -11,12 +11,12 @@ from pytorch_grad_cam.utils.image import show_cam_on_image
 
 from PIL import Image
 
-# === Configuration ===
-MODEL_PATH = "resnet18_ffpp.pth"  # Path to your trained model
-IMAGE_FOLDER = "./sample"         # Folder with images to visualize
-TARGET_LAYER = "layer4"            # Layer to visualize
+# Config
+MODEL_PATH = "resnet18_ffpp.pth"
+IMAGE_FOLDER = "./sample"
+TARGET_LAYER = "layer4"
 
-# === Load Model ===
+# Load Model
 model = models.resnet18(pretrained=False)
 model.fc = nn.Sequential(
     nn.Dropout(0.5),
@@ -27,18 +27,16 @@ model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
 model = model.to(device)
 model.eval()
 
-# === Image Transform ===
 transform = transforms.Compose([
     transforms.Resize((256, 256)),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-# === GradCAM Setup ===
 target_layer = getattr(model, TARGET_LAYER)
 cam = GradCAM(model=model, target_layers=[target_layer])
 
-# === Visualize Function ===
+# Visualize
 def visualize(img_path, save_path=None):
     # Load and preprocess image
     raw_img = cv2.imread(img_path)
@@ -82,9 +80,8 @@ def visualize(img_path, save_path=None):
     plt.savefig(save_path)
     print(f"[INFO] Saved GradCAM visualization to {save_path}")
 
-    plt.close()  # Don't leave figures open to waste memory
+    plt.close()
 
-# === Run on All Images ===
 if __name__ == "__main__":
     for img_file in os.listdir(IMAGE_FOLDER):
         if img_file.lower().endswith(('png', 'jpg', 'jpeg')):
