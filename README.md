@@ -2,7 +2,7 @@
 
 ## Github repo for 1430 projects
 
-Code for each model is in the folder
+Code for each model is in the folder, and here are the guides.
 
 ### CNN
 
